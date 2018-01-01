@@ -1,0 +1,21 @@
+{
+  "name": "game",
+  "version": "1.0.0",
+  "description": "sukura7",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "game"
+  ],
+  "author": "sukura7",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.18.2",
+    "ejs": "^2.5.7",
+    "express": "^4.16.2",
+    "mongoose": "^4.10.0",
+    "object-assign": "^4.1.1"
+  }
+}

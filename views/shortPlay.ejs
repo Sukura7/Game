@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<% include head %>
+  <link rel='stylesheet' href='http://121.40.68.211:8857/styles/shortPlay.css' />
+  <!-- <link rel='stylesheet' href='../styles/shortPlay.css' /> -->
+  <body>
+    <div class="wrapper">
+      <div class="container">
+        <div class="box-play" id="boxPlay">
+          <div></div>
+          <div></div>
+          <div></div>
+          <div></div>
+        </div>
+        <div id="box-time" class="box-time">请记住以上文字 倒计时
+          <span id="time-num">6</span>
+          秒
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <script type="text/javascript">
+    $(document).ready(function () {
+        var user = window.localStorage.getItem('user');
+        var userInfo = JSON.parse(user);
+        var score = userInfo.score;
+        var cubes = new Array(4);
+        var nums = [];
+        var time = $('#time-num').html();
+        //渲染游戏格子
+        function render() {
+          var allCube = document.getElementById("boxPlay").getElementsByTagName("div");
+          for (var i = 0; i < 4; i++) {
+            allCube[i].innerHTML = cubes[i];
+            allCube[i].className = 'cube';
+          }
+        }
+        function randomWord(randomFlag, min, max) {
+          var str = "",
+              range = min,
+              arr = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+
+          // 随机产生
+          if (randomFlag) {
+            range = Math.round(Math.random() * (max - min)) + min;
+          }
+          for (var i = 0; i < range; i++) {
+            pos = Math.round(Math.random() * (arr.length - 1));
+            str += arr[pos];
+          }
+          return str;
+        }
+
+        function initNum(score) {
+          for (var i = 0; i < cubes.length; i++) {
+            cubes[i] = randomWord(false, 5);
+          }
+          var cu = JSON.stringify(cubes)
+          window.localStorage.setItem('cubes', cu);
+          render();
+        }
+        function timer(time) {
+          var interval = setInterval(function () {
+            var second;
+            if (time > 0) {
+              time--;
+              $('#time-num').html(time);
+            } else {
+              clearInterval(interval);
+              location.href = '/wait' + window.location.search;
+            }
+          }, 1000);
+        }
+        function start(time, level) {
+          initNum(score);
+          timer(time);
+        }
+        function init(time, score) {
+          start(time, score);
+        }
+        init(time, score);
+      });
+    </script>
+  </body>
+
+</html>

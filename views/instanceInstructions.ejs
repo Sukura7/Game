@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <% include head %>
+  <link rel='stylesheet' href='http://121.40.68.211:8857/styles/instructions.css' />
+  <!-- <link rel='stylesheet' href='../styles/instructions.css' /> -->
+  <body>
+    <div class="wrapper">
+      <div class="container">
+          <p class="rules">游戏规则</p>
+          <p class="detail">
+            请在6秒钟内记住格子里的数字，6秒钟内按从小到大顺序点击高亮位置。每关您可以有两次测试机会
+          </p>
+          <a id="start" class="test">开始测试</a>
+      </div>
+    </div>
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <script type="text/javascript"> 
+    $('#start').on('click', function(){
+      window.localStorage.setItem('count', 0)
+      window.location.href='/instancePlay' + window.location.search;
+    });
+    </script>
+  </body>
+</html>

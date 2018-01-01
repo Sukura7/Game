@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<% include head %>
+  <link rel='stylesheet' href='http://121.40.68.211:8857/styles/instanceResult.css' />
+  <!-- <link rel='stylesheet' href='../styles/instanceResult.css' /> -->
+  <script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+  <body>
+    <div class="wrapper">
+      <div class="exit"></div>
+      <div class="container">
+        <div class="dialog">
+          <p class="play-more">你顺利闯过了</p>
+          <p class="points"></p>
+        </div>
+        <div class="play-again">还有上升空间，再玩一次</div>
+      </div>
+    </div>
+    </div>
+    <script type="text/javascript">
+      var user = window.localStorage.getItem('user');
+      var userInfo = JSON.parse(user);
+      var level = userInfo.level;
+      var count = window.localStorage.getItem('count') || 0;
+      var n = Number(level) - 2;
+      $('.points').html(n + '关');
+      if (level == 16 && count < 2) {
+        $('.play-again').html('恭喜你通关成功！');
+      }
+      function addSessionId(o){
+        var t = Math.floor(new Date().getTime() / 1000);
+        var userid = o.grade + '_' + o.classNo  + '_'  + o.sno;
+        var session_id = userid + '_' + t;
+        o.session_id = session_id;
+        o.last_modify = t;
+        o.totalScore = 0;
+        return o;
+      }
+      $('.play-again').click(function () {
+        userInfo.level = 2;
+
+        o = addSessionId(userInfo);
+        $.ajax({
+            type: "post",
+            url: "/createSession",
+            dataType: "json",
+            data: o,
+            success: function callback(d){
+              const success = d.success;
+              const sessionQuery = 'session_id=' + o.session_id;
+              if (success) location.href = '/instancePlay?' + sessionQuery;
+            }
+          })
+        count = 0;
+        window.localStorage.setItem('count', count);
+        window.localStorage.setItem('user', JSON.stringify(o));
+      });
+      $('.exit').on('click', function () {
+        count = 0;
+        window.localStorage.setItem('count', count);
+        location.href = '/game';
+      });
+    </script>
+  </body>
+</html>

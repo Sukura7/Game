@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+    <% include head %>
+  <link rel='stylesheet' href='http://121.40.68.211:8857/styles/index.css' />
+  <!-- <link rel='stylesheet' href='../styles/index.css' /> -->
+  <body>
+      
+    <div class="wrapper">
+      <div class="marquee">
+        <span class="content">上次测试结果：
+          瞬时记忆通过<span class="instance-score">0</span>关
+          短时记忆得到<span class="short-score">0</span>分
+          <span class="content-space"></span>
+        </span>
+      </div>
+      <div class="container">
+          
+          <!--<form name="loginForm" method="post" action="/instructions" >-->
+          <h2 class="title">最强记忆</h2>
+          <form>
+            <div class="formItem">
+              <label for="">您姓什么</label>
+              <input id="name" name="name" placeholder="您的姓" type="text" class="item">
+            </div>
+            <div class="formItem">
+              <label for="">年级</label>
+              <select id="grade" class="item" onChange="hiddenInput(this)">
+                <option value="primary1" >小学一年级</option>
+                <option value="primary2">小学二年级</option>
+                <option value="primary3">小学三年级</option>
+                <option value="primary4">小学四年级</option>
+                <option value="primary5">小学五年级</option>
+                <option value="primary6">小学六年级</option>
+                <option value="middle1">中学一年级</option>
+                <option value="middle2">中学二年级</option>
+                <option value="middle3">中学三年级</option>
+                <option value="other">其他</option>
+                </select>
+            </div>
+            <div class="formItem">
+              <label for="">班级</label>
+              <select id="classNo" class="item">
+                <option value="class1">1班</option>
+                <option value="class2">2班</option>
+                <option value="class3">3班</option>
+                <option value="class4">4班</option>
+                <option value="class5">5班</option>
+                <option value="class6">6班</option>
+              </select>
+            </div>
+            <div class="formItem">
+              <label for="">学号</label>
+              <input id="sno" placeholder="01~50" type="text" class="item">
+            </div>
+            <div >
+                <input hidden type="number" id="level" value=2 class="item">
+            </div>
+            <div >
+                <input hidden type="text" id="score" value='0' class="item">
+            </div>
+            <div class="formItem">
+              <label for="">选择游戏模式</label>
+              <input type="radio" name="mode" value="瞬时记忆" checked> 瞬时记忆
+              <input class="mode" type="radio" name="mode" value="短时记忆"> 短时记忆
+            </div>
+            <a  id="start" class="test">开始测试</a>
+          </form>
+      </div>
+      <!-- <a class="result" id="show">查看所有成绩</a> -->
+    </div>
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <script type="text/javascript">
+    function addSessionId(o){
+      var t = Math.floor(new Date().getTime() / 1000);
+      var userid = o.grade + '_' + o.classNo  + '_'  + o.sno;
+      var session_id = userid + '_' + t;
+      o.session_id = session_id;
+      o.last_modify = t;
+      o.totalScore = 0;
+      return o;
+    }
+    
+    function hiddenInput(o){
+      var grade = $('#grade option:selected').text();
+      if(grade === '其他') {
+        $("#classNo").attr("disabled", true);
+        $('#classNo option:selected').text("")
+        $('#sno').attr("disabled", true);
+        $('#sno').val("");
+      }else{
+        $("#classNo").attr("disabled", false);
+        $('#classNo option:selected').text(o.classNo || '1班');
+        $('#sno').attr("disabled", false);
+        $('#sno').text(o.sno || '');
+      }
+    }
+    $(document).ready(function () {
+      const o = JSON.parse(window.localStorage.getItem('user') || '{}');
+      hiddenInput(o);
+      if (o){
+        if(o.name) $('#name').val(o.name);
+        if(o.grade) $('#grade option:selected').text(o.grade);
+        if(o.classNo) $('#classNo option:selected').text(o.classNo);
+        if(o.mode) $("input[type='radio'][name='mode'][value='" + o.mode + "']").attr("checked", "checked");
+        if(o.sno) $('#sno').val(o.sno);
+      }
+      if(!o.level){
+        var nv = 0;
+      }else{
+        var nv = Number(o.level) - 2;
+      }
+      $('.instance-score').html(nv);
+      $('.short-score').html(o.score)
+      function startGame() {
+        var name = $('#name').val();
+        var grade = $('#grade option:selected').text();
+        var classNo = $('#classNo option:selected').text();
+        var mode = $('input[type="radio"][name="mode"]:checked').val();
+        var sno = $('#sno').val();
+        var o = {
+            name: name,
+            grade: grade,
+            classNo:classNo,
+            sno: sno,
+            level: 2,
+            score: 0,
+            mode: mode,
+          };
+
+        //检查是否补全
+        var validate = {
+          name: '姓氏',
+          sno: '学号',
+        };
+        var strs = [];
+        for (var key in validate){
+          var name = validate[key];
+          if(!o[key]) strs.push(name);
+        }
+        if(strs.length && grade !== '其他'){
+          alert('请补全' + strs.join('、') + '字段...');
+          return;
+        }
+        //增加session_id
+        o = addSessionId(o);
+        var ostr = JSON.stringify(o);
+        console.log(o)
+        window.localStorage.setItem('user', ostr);
+        //
+        $.ajax({
+          type: 'POST',
+          url:'/createSession',
+          dataType: 'json',
+          data: o,
+          success: function(d){
+            const sessionQuery = 'session_id=' + o.session_id;
+            if(mode === '瞬时记忆') location.href = '/instanceInstruction?' + sessionQuery;
+            if(mode === '短时记忆') location.href = '/shortInstruction?' + sessionQuery;
+          }
+        });
+      }
+      $("#start").on('mousedown', startGame);
+      $('#show').on('click', function(){
+        window.localtion.href = '/showResult';
+        // var string = o.grade + '_' + o.classNo + '_' + o.sno;
+        // window.location.href='/showResult?' + 'session_id=' + o.session_id + '&'  + 'unique=' + string;
+      });
+    })
+    </script>
+  </body>
+</html>

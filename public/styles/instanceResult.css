@@ -1,0 +1,60 @@
+.wapper{
+  width: 100%;
+  height: 100%;
+
+}
+.exit {
+  width: 24px;
+  height: 24px;
+  margin: 20px 0px 0px 20px;
+  box-sizing: border-box;
+  background: url(../images/exit.png) no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.container{
+  margin: 0 auto;
+  width: 7.5rem;
+  height: 11rem;
+  background: url(../images/back.gif) no-repeat;
+  background-size: cover;
+  background-position: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* justify-content: center; */
+}
+.dialog{
+  width: 100%;
+  height: 2rem;
+  border: 1px solid #dcdccc;
+  background: #fff;
+  z-index: 99;
+  box-shadow: 1px 1px 5px #888888;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin-top: 7.2rem;
+}
+.dialog .play-more{
+  color: #888
+}
+.dialog .points{
+  color: #0366d6;
+  font-size: 32px;
+}
+.play-again {
+  width: 100%;
+  height: .8rem;
+  border-radius: 2px;
+  display: block;
+  color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  background:#0366d6;
+  margin-top: .8rem;
+  text-align: center;
+  line-height: .8rem;
+  font-size: 14px;
+}

@@ -1,0 +1,34 @@
+.wapper{
+  width: 100%;
+  height: 100%;
+}
+.container {
+  margin: 2rem auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 8rem;
+  height: 10rem;
+}
+.box-play {
+  width: 6.5rem;
+  height: 9rem;
+  background: url(../images/back.gif) no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+.box-time{
+  width: 7.3rem;
+  height: 1rem;
+  border-radius: 2px;
+  display: block;
+  color: #fff;
+  appearance: none;
+  -webkit-appearance: none;
+  background: rgb(190,190,190);
+  margin: .5rem auto;
+  text-align: center;
+  line-height: 1rem;
+  font-size: 14px;
+}

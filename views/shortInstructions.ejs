@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <% include head %>
+  <link rel='stylesheet' href='http://121.40.68.211:8857/styles/instructions.css' />
+  <!-- <link rel='stylesheet' href='../styles/instructions.css' /> -->
+  <body>
+    <div class="wrapper">
+      <div class="container">
+          <p class="rules">游戏规则</p>
+          <p class="detail">
+            请尽力记住连续出现的字符串，1分钟后点击之前看到的字符串。如果15秒以内还没有点击完视同放弃            
+          </p>
+          <a  id="start" class="test">开始测试</aß>
+      </div>
+    </div>
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <script type="text/javascript"> 
+      $('#start').on('click', function(){
+        var num = 0;
+        var trueNum = 0;
+        window.localStorage.setItem('playInfo', JSON.stringify({trueNum, num}))
+        window.location.href='/shortPlay' + window.location.search;
+      });
+    </script>
+  </body>
+</html>

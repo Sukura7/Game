@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<% include head %>
+  <link rel='stylesheet' href='http://121.40.68.211:8857/styles/wait.css' />
+  <!-- <link rel='stylesheet' href='../styles/wait.css' /> -->
+  <body>
+    <div class="wrapper">
+      <div class="container">
+        <div class="box-play" id="boxPlay">
+         
+        </div>
+        <div id="box-time" class="box-time">印刷考题中还有<span id="time-num">40</span>秒，请不要关屏......
+        </div>
+      </div>
+    </div>
+    <script type="text/javascript" src="http://cdn.bootcss.com/jquery/3.1.1/jquery.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        var user = window.localStorage.getItem('user');
+        var userInfo = JSON.parse(user);
+        var score = userInfo.score;
+        var time = $('#time-num').html();
+        function timer(time) {
+          var interval = setInterval(function () {
+            var second;
+            if (time > 0) {
+              time--;
+              $('#time-num').html(time);
+            } else {
+              clearInterval(interval);
+              location.href = '/shortAnswer' + window.location.search;
+            }
+          }, 1000);
+        }
+        function start(time) {
+          timer(time);
+        }
+        function init(time) {
+          start(time);
+        }
+        init(time);
+      });
+    </script>
+    </script>
+  </body>
+
+</html>
